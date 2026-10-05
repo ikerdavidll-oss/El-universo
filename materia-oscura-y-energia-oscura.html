@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Universo Oscuro | Materia y Energía Oscura</title>
+    <link rel="icon" type="image/png" href="pagina-icon.png">
+    <style>
+        :root {
+            --bg-principal: #030308;
+            --bg-tarjeta: rgba(255, 255, 255, 0.03);
+            --borde-tarjeta: rgba(255, 255, 255, 0.08);
+            --texto-primario: #ffffff;
+            --texto-secundario: #b3b3cc;
+            --materia-oscura: #9d4edd;
+            --energia-oscura: #00b4d8;
+            --materia-normal: #ffb703;
+            --fuente: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--fuente);
+            background-color: var(--bg-principal);
+            color: var(--texto-primario);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #canvas-estrellas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .contenido-web {
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 10%;
+            background: rgba(3, 3, 8, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--borde-tarjeta);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--materia-oscura), var(--energia-oscura));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav a {
+            color: var(--texto-secundario);
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--texto-primario);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero::before, .hero::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            filter: blur(150px);
+            opacity: 0.15;
+        }
+        .hero::before { background: var(--materia-oscura); top: 20%; left: 20%; }
+        .hero::after { background: var(--energia-oscura); bottom: 20%; right: 20%; }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            display: block;
+            background: linear-gradient(90deg, var(--materia-oscura), var(--energia-oscura));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--texto-secundario);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: white;
+            color: var(--bg-principal);
+            box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+        }
+
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .seccion-titulo {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .grid-conceptos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .tarjeta {
+            background: var(--bg-tarjeta);
+            border: 1px solid var(--borde-tarjeta);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .tarjeta:hover { transform: translateY(-5px); }
+        .tarjeta.materia:hover { border-color: var(--materia-oscura); }
+        .tarjeta.energia:hover { border-color: var(--energia-oscura); }
+        .tarjeta h3 { font-size: 1.8rem; margin-bottom: 1rem; }
+        .tarjeta.materia h3 { color: var(--materia-oscura); }
+        .tarjeta.energia h3 { color: var(--energia-oscura); }
+        .tarjeta p { color: var(--texto-secundario); margin-bottom: 1.5rem; }
+        .linea-tiempo {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            border-left: 2px solid var(--borde-tarjeta);
+        }
+
+        .hito {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        .hito::before {
+            content: '';
+            position: absolute;
+            left: calc(-2rem - 7px);
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--materia-oscura);
+            border: 2px solid var(--bg-principal);
+        }
+
+        .hito:nth-child(even)::before { background: var(--energia-oscura); }
+        .hito .fecha { font-weight: bold; color: var(--materia-normal); font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .hito h4 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .hito p { color: var(--texto-secundario); }
+
+        .seccion-interactiva {
+            background: var(--bg-tarjeta);
+            border: 1px solid var(--borde-tarjeta);
+            border-radius: 24px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .control-universo { margin-bottom: 1.5rem; }
+        #nombreModelo { font-weight: bold; color: var(--energia-oscura); }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            max-width: 600px;
+            height: 8px;
+            border-radius: 5px;
+            background: #222;
+            outline: none;
+            margin: 2rem 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--energia-oscura);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--energia-oscura);
+        }
+
+        .composicion-grafico {
+            display: flex;
+            height: 45px;
+            border-radius: 25px;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 2rem auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .barra {
+            transition: width 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .barra.eo { background: var(--energia-oscura); color: white;}
+        .barra.mo { background: var(--materia-oscura); color: white;}
+        .barra.mn { background: var(--materia-normal); color: #000; }
+
+        .leyenda { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+        .leyenda-item span { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+
+        .acordeon { max-width: 800px; margin: 0 auto; }
+        .acordeon-item { border-bottom: 1px solid var(--borde-tarjeta); padding: 1.5rem 0; }
+        .acordeon-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 1.2rem; font-weight: 600; }
+        .acordeon-header::after { content: '+'; font-size: 1.5rem; color: var(--texto-secundario); transition: transform 0.3s; }
+        .acordeon-item.abierto .acordeon-header::after { transform: rotate(45deg); }
+        .acordeon-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, margin-top 0.3s ease; color: var(--texto-secundario); }
+        .acordeon-item.abierto .acordeon-content { margin-top: 1rem; max-height: 200px; }
+        .contenedor-quiz { max-width: 700px; margin: 0 auto; background: var(--bg-tarjeta); border: 1px solid var(--borde-tarjeta); border-radius: 20px; padding: 2.5rem; }
+        #pregunta-quiz { margin-bottom: 1.5rem; }
+        .opcion-quiz { display: block; width: 100%; padding: 1rem; background: rgba(255,255,255,0.02); border: 1px solid var(--borde-tarjeta); border-radius: 10px; color: white; text-align: left; margin-bottom: 1rem; cursor: pointer; transition: all 0.2s ease; }
+        .opcion-quiz:hover { background: rgba(255,255,255,0.08); border-color: var(--texto-secundario); }
+        .opcion-quiz.correcta { background: rgba(40, 167, 69, 0.2); border-color: #28a745; color: #fff; }
+        .opcion-quiz.incorrecta { background: rgba(220, 53, 69, 0.2); border-color: #dc3545; color: #fff; }
+        #resultado-quiz { margin-top: 1.5rem; font-weight: bold; font-size: 1.1rem; text-align: center; }
+
+        footer { text-align: center; padding: 3rem; border-top: 1px solid var(--borde-tarjeta); color: var(--texto-secundario); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            header { padding: 1rem 5%; }
+            nav { display: none; }
+            .seccion-interactiva { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-estrellas"></canvas>
+
+    <div class="contenido-web">
+<header>
+    <div class="logo">COSMOS OSCURO</div>
+    <nav style="display: flex; align-items: center;">
+        <a href="#conceptos">Conceptos</a>
+        <a href="#historia">Cronología</a>
+        <a href="#simulador">Simulador</a>
+        <a href="#preguntas">Importancia</a>
+        <a href="#quiz">Desafío</a>
+        <!-- Botón para ir a la NASA: Materia Oscura -->
+        <a href="https://ciencia.nasa.gov/universo/materia-oscura/" target="_blank" class="btn" style="padding: 0.4rem 1.1rem; margin-left: 1.5rem; font-size: 0.85rem; border-color: var(--materia-oscura);">NASA: Materia</a>
+        <!-- Botón para ir a la NASA: Energía Oscura -->
+        <a href="https://ciencia.nasa.gov/universo/que-es-la-energia-oscura/" target="_blank" class="btn" style="padding: 0.4rem 1.1rem; margin-left: 1rem; font-size: 0.85rem; border-color: var(--energia-oscura);">NASA: Energía</a>
+        <!-- Botón para ir a la NASA-->
+        <a href="https://nasa.gov" target="_blank" class="btn" style="padding: 0.4rem 1.1rem; margin-left: 1rem; font-size: 0.85rem; border-color: var(--NASA);">NASA: Pagina Oficial</a>
+    </nav>
+</header>
+
+
+        <section class="hero">
+            <h1>El 95% del Universo <br><span>Es Invisible</span></h1>
+            <p>Todo lo que podemos ver, tocar y medir con telescopios representa solo una diminuta fracción de la realidad cósmica. Explora las fuerzas que dominan el espacio.</p>
+            <a href="#conceptos" class="btn">Empezar Exploración</a>
+        </section>
+
+<section id="conceptos">
+    <h2 class="seccion-titulo">Los Dos Grandes Misterios</h2>
+    <div class="grid-conceptos">
+        <div class="tarjeta materia">
+            <h3>Materia Oscura</h3>
+            <p>Es una forma de materia que no emite, absorbe ni refleja luz, lo que la hace completamente invisible para nuestros instrumentos tradicionales.</p>
+            <p><strong>¿Para qué sirve?</strong> Actúa como un "andamiaje" o pegamento gravitacional invisible que mantiene unidas a las galaxias. Sin ella, las galaxias girarían tan rápido que saldrían despedidas y se desintegrarían.</p>
+            <!-- Imagen con tamaño controlado y bordes redondeados -->
+            <img src="materia_oscura-logo.jpg" alt="Materia Oscura" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-top: 1.5rem; opacity: 0.9;">
+        </div>
+
+        <div class="tarjeta energia">
+            <h3>Energía Oscura</h3>
+            <p>Es una fuerza misteriosa y homogénea que llena todo el espacio y ejerce una presión que repele la gravedad a gran escala.</p>
+            <p><strong>¿Para qué sirve?</strong> Es la responsable directa de la aceleración de la expansión del universo. En lugar de frenarse por la gravedad, el tejido del espacio se estira cada vez más rápido.</p>
+            <!-- Imagen con tamaño controlado y bordes redondeados -->
+            <img src="energia_oscura-logo.jpg" alt="Energía Oscura" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-top: 1.5rem; opacity: 0.9;">
+        </div>
+    </div>
+</section>
+
+
+
+        <section id="historia">
+            <h2 class="seccion-titulo">Línea de Tiempo del Descubrimiento</h2>
+            <div class="linea-tiempo">
+                <div class="hito">
+                    <div class="fecha">1933</div>
+                    <h4>El Origen del Misterio</h4>
+                    <p>El astrofísico Fritz Zwicky nota que las galaxias en el Cúmulo de Coma se mueven demasiado rápido. Propone por primera vez la existencia de una "materia oscura" invisible que aporta la gravedad necesaria.</p>
+                </div>
+                <div class="hito">
+                    <div class="fecha">1970</div>
+                    <h4>La Confirmación de Vera Rubin</h4>
+                    <p>La astrónoma Vera Rubin analiza la rotación de las galaxias espirales y demuestra definitivamente que hay mucha más masa oculta de la que podemos ver en forma de estrellas.</p>
+                </div>
+                <div class="hito">
+                    <div class="fecha">1998</div>
+                    <h4>El Descubrimiento de la Energía Oscura</h4>
+                    <p>Dos equipos de científicos miden la luz de supernovas lejanas y descubren con asombro que la expansión del universo se está acelerando, impulsada por una fuerza desconocida: la Energía Oscura.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="simulador" class="seccion-interactiva">
+            <h2>Simulador de Composición Cósmica</h2>
+            <p>Ajusta los valores para observar el balance real de nuestro universo comparado con otros modelos hipotéticos.</p>
+            <div class="control-universo">
+                <label for="rangoUniverso">Modelo del Universo: <span id="nombreModelo">Universo Real Actual</span></label><br>
+                <input type="range" id="rangoUniverso" min="1" max="3" value="1" class="slider">
+            </div>
+
+            <div class="composicion-grafico">
+                <div id="barraEO" class="barra eo" style="width: 68%;">68%</div>
+                <div id="barraMO" class="barra mo" style="width: 27%;">27%</div>
+                <div id="barraMN" class="barra mn" style="width: 5%;">5%</div>
+            </div>
+
+            <div class="leyenda">
+                <div class="leyenda-item"><span style="background: var(--energia-oscura);"></span>Energía Oscura</div>
+                <div class="leyenda-item"><span style="background: var(--materia-oscura);"></span>Materia Oscura</div>
+                <div class="leyenda-item"><span style="background: var(--materia-normal);"></span>Materia Normal (Estrellas, planetas, vida)</div>
+            </div>
+        </section>
+
+        <section id="preguntas">
+            <h2 class="seccion-titulo">Preguntas Clave e Importancia</h2>
+            <div class="acordeon">
+                <div class="acordeon-item">
+                    <div class="acordeon-header">¿Cómo están relacionadas la Materia y la Energía Oscura?</div>
+                    <div class="acordeon-content">
+                        <p>Aunque comparten la palabra "oscura" (que significa que no sabemos con exactitud qué son), operan como fuerzas opuestas. La Materia Oscura atrae las cosas mediante gravedad a nivel local (galaxias), mientras que la Energía Oscura empuja el espacio hacia afuera a nivel global.</p>
+                    </div>
+                </div>
+
+                <div class="acordeon-item">
+                    <div class="acordeon-header">¿Por qué es importante investigarlas?</div>
+                    <div class="acordeon-content">
+                        <p>Comprender estos fenómenos definirá el destino final de nuestro universo. Dependiendo de cómo se comporte la energía oscura, el universo podría expandirse para siempre hasta enfriarse por completo (Big Freeze) o desgarrarse a sí mismo (Big Rip).</p>
+                    </div>
+                </div>
+
+                <div class="acordeon-item">
+                    <div class="acordeon-header">¿Cómo sabemos que existen si no se pueden ver?</div>
+                    <div class="acordeon-content">
+                        <p>Sabemos que están ahí por sus efectos indirectos. Vemos el efecto gravitacional de la materia oscura en la velocidad de las estrellas, y medimos la aceleración del espacio a través de la luz de supernovas lejanas y el fondo cósmico de microondas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz">
+            <h2 class="seccion-titulo">Ponte a Prueba: Desafío Cósmico</h2>
+            <div class="contenedor-quiz">
+                <h3 id="pregunta-quiz">¿Qué porcentaje aproximado del universo está compuesto por Materia Normal (estrellas, planetas, etc.)?</h3>
+                <div id="opciones-quiz">
+                    <button class="opcion-quiz" data-correcto="false">A) Alrededor del 68%</button>
+                    <button class="opcion-quiz" data-correcto="false">B) Alrededor del 27%</button>
+                    <button class="opcion-quiz" data-correcto="true">C) Solo el 5%</button>
+                </div>
+                <div id="resultado-quiz"></div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Cosmos Oscuro - Divulgación Científica Avanzada. Diseñado con HTML, CSS y JS.</p>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('canvas-estrellas');
+            const ctx = canvas.getContext('2d');
+            let estrellas = [];
+
+            function ajustarCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', ajustarCanvas);
+            ajustarCanvas();
+
+            class Estrella {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.tamano = Math.random() * 1.5;
+                    this.velocidadY = Math.random() * 0.2 + 0.05;
+                }
+                actualizar() {
+                    this.y -= this.velocidadY;
+                    if (this.y < 0) {
+                        this.y = canvas.height;
+                        this.x = Math.random() * canvas.width;
+                    }
+                }
+                dibujar() {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.tamano, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < 150; i++) {
+                estrellas.push(new Estrella());
+            }
+
+            function animar() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                estrellas.forEach(estrella => {
+                    estrella.actualizar();
+                    estrella.dibujar();
+                });
+                requestAnimationFrame(animar);
+            }
+            animar();
+
+            const slider = document.getElementById('rangoUniverso');
+            const nombreModelo = document.getElementById('nombreModelo');
+            const barraEO = document.getElementById('barraEO');
+            const barraMO = document.getElementById('barraMO');
+            const barraMN = document.getElementById('barraMN');
+
+            const modelos = {
+                1: { nombre: "Universo Real Actual", eo: 68, mo: 27, mn: 5 },
+                2: { nombre: "Universo Primitivo", eo: 0, mo: 63, mn: 37 },
+                3: { nombre: "Universo Dominado por Energía Oscura", eo: 95, mo: 4, mn: 1 }
+            };
+
+            slider.addEventListener('input', (e) => {
+                const modelo = modelos[e.target.value];
+                nombreModelo.innerText = modelo.nombre;
+                
+                barraEO.style.width = `${modelo.eo}%`;
+                barraEO.innerText = modelo.eo > 0 ? `${modelo.eo}%` : '';
+                
+                barraMO.style.width = `${modelo.mo}%`;
+                barraMO.innerText = modelo.mo > 0 ? `${modelo.mo}%` : '';
+                
+                barraMN.style.width = `${modelo.mn}%`;
+                barraMN.innerText = `${modelo.mn}%`;
+            });
+
+            const itemsAcordeon = document.querySelectorAll('.acordeon-item');
+            itemsAcordeon.forEach(item => {
+                item.querySelector('.acordeon-header').addEventListener('click', () => {
+                    itemsAcordeon.forEach(otro => { 
+                        if (otro !== item) otro.classList.remove('abierto'); 
+                    });
+                    item.classList.toggle('abierto');
+                });
+            });
+
+            const opcionesQuiz = document.querySelectorAll('.opcion-quiz');
+            const resultadoQuiz = document.getElementById('resultado-quiz');
+
+            opcionesQuiz.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    opcionesQuiz.forEach(opt => opt.style.pointerEvents = 'none');
+                    const esCorrecto = this.getAttribute('data-correcto') === 'true';
+
+                    if (esCorrecto) {
+                        this.classList.add('correcta');
+                        resultadoQuiz.innerHTML = "¡Excelente! 🌟 La materia normal (bariónica) compone únicamente el 5% de todo lo que existe.";
+                        resultadoQuiz.style.color = "#28a745";
+                    } else {
+                        this.classList.add('incorrecta');
+                        resultadoQuiz.innerHTML = "Respuesta incorrecta. 🔭 Recuerda: el 95% restante del universo está oculto bajo formas oscuras.";
+                        resultadoQuiz.style.color = "#dc3545";
+                        
+                        opcionesQuiz.forEach(opt => {
+                            if(opt.getAttribute('data-correcto') === 'true') opt.classList.add('correcta');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
