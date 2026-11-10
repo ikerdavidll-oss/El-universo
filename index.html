@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Universo Oscuro | Materia y Energía Oscura</title>
+    <link rel="icon" type="image/png" href="pagina-icon.png">
     <style>
         :root {
             --bg-principal: #030308;
@@ -301,16 +302,19 @@
     <canvas id="canvas-estrellas"></canvas>
 
     <div class="contenido-web">
-        <header>
-            <div class="logo">COSMOS OSCURO</div>
-            <nav>
-                <a href="#conceptos">Conceptos</a>
-                <a href="#historia">Cronología</a>
-                <a href="#simulador">Simulador</a>
-                <a href="#preguntas">Importancia</a>
-                <a href="#quiz">Desafío</a>
-            </nav>
-        </header>
+<header>
+    <div class="logo">COSMOS OSCURO</div>
+    <nav style="display: flex; align-items: center;">
+        <a href="#conceptos">Conceptos</a>
+        <a href="#historia">Cronología</a>
+        <a href="#simulador">Simulador</a>
+        <a href="#preguntas">Importancia</a>
+        <a href="#quiz">Desafío</a>
+        <!-- Botón para ir a la NASA-->
+        <a href="https://nasa.gov" target="_blank" class="btn" style="padding: 0.4rem 1.1rem; margin-left: 1rem; font-size: 0.85rem; border-color: var(--NASA);">NASA: Pagina Oficial</a>
+    </nav>
+</header>
+
 
         <section class="hero">
             <h1>El 95% del Universo <br><span>Es Invisible</span></h1>
@@ -325,7 +329,7 @@
             <h3>Materia Oscura</h3>
             <p>Es una forma de materia que no emite, absorbe ni refleja luz, lo que la hace completamente invisible para nuestros instrumentos tradicionales.</p>
             <p><strong>¿Para qué sirve?</strong> Actúa como un "andamiaje" o pegamento gravitacional invisible que mantiene unidas a las galaxias. Sin ella, las galaxias girarían tan rápido que saldrían despedidas y se desintegrarían.</p>
-            <!-- Imagen con tamaño controlado y bordes redondeados -->
+            <a href="https://ciencia.nasa.gov/universo/materia-oscura/" target="_blank" class="btn" style="display: block; text-align: center; margin-top: 1rem; border-color: var(--materia-oscura); font-size: 0.9rem; padding: 0.6rem 1.5rem;">Ver en la NASA 🚀</a>
             <img src="materia_oscura-logo.jpg" alt="Materia Oscura" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-top: 1.5rem; opacity: 0.9;">
         </div>
 
@@ -333,12 +337,11 @@
             <h3>Energía Oscura</h3>
             <p>Es una fuerza misteriosa y homogénea que llena todo el espacio y ejerce una presión que repele la gravedad a gran escala.</p>
             <p><strong>¿Para qué sirve?</strong> Es la responsable directa de la aceleración de la expansión del universo. En lugar de frenarse por la gravedad, el tejido del espacio se estira cada vez más rápido.</p>
-            <!-- Imagen con tamaño controlado y bordes redondeados -->
+            <a href="https://ciencia.nasa.gov/universo/que-es-la-energia-oscura/" target="_blank" class="btn" style="display: block; text-align: center; margin-top: 1rem; border-color: var(--energia-oscura); font-size: 0.9rem; padding: 0.6rem 1.5rem;">Ver en la NASA 🚀</a>
             <img src="energia_oscura-logo.jpg" alt="Energía Oscura" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-top: 1.5rem; opacity: 0.9;">
         </div>
     </div>
 </section>
-
 
 
         <section id="historia">
@@ -361,7 +364,30 @@
                 </div>
             </div>
         </section>
-        
+
+
+
+        <section id="historia">
+            <h2 class="seccion-titulo">Línea de Tiempo del Descubrimiento</h2>
+            <div class="linea-tiempo">
+                <div class="hito">
+                    <div class="fecha">1933</div>
+                    <h4>El Origen del Misterio</h4>
+                    <p>El astrofísico Fritz Zwicky nota que las galaxias en el Cúmulo de Coma se mueven demasiado rápido. Propone por primera vez la existencia de una "materia oscura" invisible que aporta la gravedad necesaria.</p>
+                </div>
+                <div class="hito">
+                    <div class="fecha">1970</div>
+                    <h4>La Confirmación de Vera Rubin</h4>
+                    <p>La astrónoma Vera Rubin analiza la rotación de las galaxias espirales y demuestra definitivamente que hay mucha más masa oculta de la que podemos ver en forma de estrellas.</p>
+                </div>
+                <div class="hito">
+                    <div class="fecha">1998</div>
+                    <h4>El Descubrimiento de la Energía Oscura</h4>
+                    <p>Dos equipos de científicos miden la luz de supernovas lejanas y descubren con asombro que la expansión del universo se está acelerando, impulsada por una fuerza desconocida: la Energía Oscura.</p>
+                </div>
+            </div>
+        </section>
+
         <section id="simulador" class="seccion-interactiva">
             <h2>Simulador de Composición Cósmica</h2>
             <p>Ajusta los valores para observar el balance real de nuestro universo comparado con otros modelos hipotéticos.</p>
